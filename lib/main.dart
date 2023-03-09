@@ -12,11 +12,15 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'NCA Tech',
       theme: ThemeData(
         primarySwatch: buildMaterialColor(const Color(0x000eef90)),
       ),
-      home: const LoginPage(),
+      initialRoute: '/',
+      routes: {
+        '/': (_) => const LoginPage(),
+      }
     );
   }
 }

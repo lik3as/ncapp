@@ -1,17 +1,23 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class ScanPage extends StatelessWidget {
   const ScanPage({super.key});
 
-  void scan() async{
+  void scan(ScanMode scanMode) async {
     String barcodeScan = await FlutterBarcodeScanner.scanBarcode(
-        "#ff0d11", "Cancel", true, ScanMode.DEFAULT);
+        "#ff0d11", "Cancel", true, scanMode);
+    Fluttertoast.showToast(
+        msg: barcodeScan,
+        toastLength: Toast.LENGTH_LONG,
+        textColor: Colors.black,
+    backgroundColor: Colors.white);
   }
+
   @override
   Widget build(BuildContext context) {
-    scan();
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height - 100; //Removendo Barra
     return Scaffold(
@@ -38,7 +44,43 @@ class ScanPage extends StatelessWidget {
                 width: 250,
                 height: 250,
               ),
-            )
+            ),
+            SizedBox(
+              height: sizePercent(height, 8),
+            ),
+            Center(
+              child: TextButton(
+                style: TextButton.styleFrom(
+                  textStyle: const TextStyle(
+                    fontSize: 20,
+                    fontFamily: "Jost",
+                    fontWeight: FontWeight.bold,
+                  ),
+                  backgroundColor: Colors.black,
+                  foregroundColor: Colors.white,
+                ),
+                onPressed: () => scan(ScanMode.QR),
+                child: Text("QR-CODE"),
+              ),
+            ),
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 18),
+                child: TextButton(
+                  style: TextButton.styleFrom(
+                    textStyle: const TextStyle(
+                      fontSize: 20,
+                      fontFamily: "Jost",
+                      fontWeight: FontWeight.bold,
+                    ),
+                    backgroundColor: Colors.black,
+                    foregroundColor: Colors.white,
+                  ),
+                  onPressed: () => scan(ScanMode.BARCODE),
+                  child: Text("BARCODE"),
+                ),
+              ),
+            ),
           ],
         ),
       ),

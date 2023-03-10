@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:ncapp/services/httpservice.dart';
 import 'package:ncapp/view/UI/loginPage.dart';
 
-import '../model/User.dart';
+import '../model/user.dart';
 
 class LoginController extends ChangeNotifier{
 

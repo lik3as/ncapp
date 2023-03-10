@@ -2,24 +2,69 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:ncapp/controller/scanController.dart';
+import 'package:provider/provider.dart';
 
 class ScanPage extends StatelessWidget {
   const ScanPage({super.key});
 
-  void scan(ScanMode scanMode) async {
+  void scan(ScanMode scanMode, BuildContext context) async {
+    final width = MediaQuery
+        .of(context)
+        .size
+        .width;
+    final height = MediaQuery
+        .of(context)
+        .size
+        .height - 100; //Removendo Barra
+    final ScanController scanController = ScanController();
+
+    double size = sizePercent(height, 60);
     String barcodeScan = await FlutterBarcodeScanner.scanBarcode(
         "#ff0d11", "Cancel", true, scanMode);
-    Fluttertoast.showToast(
-        msg: barcodeScan,
-        toastLength: Toast.LENGTH_LONG,
-        textColor: Colors.black,
-    backgroundColor: Colors.white);
+
+    Map<String, String> product = await scanController.authSerial(barcodeScan);
+    scanController.update(product, barcodeScan);
+    showDialog(
+        context: context,
+        builder: (BuildContext context)
+    =>
+        ChangeNotifierProvider(
+          create: (context) => scanController,
+          child: AlertDialog(
+              titleTextStyle: TextStyle(fontFamily: 'Jost', fontSize: 14, color: Colors.black),
+              title: Text(scanController.dialogTitle),
+                content: SizedBox(height: sizePercent(height, 60),),
+
+                actions: [
+                  TextButton(
+                    style: TextButton.styleFrom(
+                      textStyle: const TextStyle(
+                        fontSize: 16,
+                        fontFamily: "Jost",
+                        fontWeight: FontWeight.bold,
+                      ),
+                      backgroundColor: Colors.black,
+                      foregroundColor: Colors.white,
+                    ),
+                    onPressed: () => {},
+                    child: Text(scanController.dialogText),
+                  ),
+                ],
+              ),
+        ));
   }
 
   @override
   Widget build(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
-    final height = MediaQuery.of(context).size.height - 100; //Removendo Barra
+    final width = MediaQuery
+        .of(context)
+        .size
+        .width;
+    final height = MediaQuery
+        .of(context)
+        .size
+        .height - 100; //Removendo Barra
     return Scaffold(
       drawer: const Drawer(),
       appBar: AppBar(
@@ -59,7 +104,7 @@ class ScanPage extends StatelessWidget {
                   backgroundColor: Colors.black,
                   foregroundColor: Colors.white,
                 ),
-                onPressed: () => scan(ScanMode.QR),
+                onPressed: () => scan(ScanMode.QR, context),
                 child: Text("QR-CODE"),
               ),
             ),
@@ -76,7 +121,7 @@ class ScanPage extends StatelessWidget {
                     backgroundColor: Colors.black,
                     foregroundColor: Colors.white,
                   ),
-                  onPressed: () => scan(ScanMode.BARCODE),
+                  onPressed: () => scan(ScanMode.BARCODE, context),
                   child: Text("BARCODE"),
                 ),
               ),

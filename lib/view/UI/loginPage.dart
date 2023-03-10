@@ -103,7 +103,7 @@ class LoginPageState extends State<LoginPage> {
                   foregroundColor: Colors.white,
                 ),
                 onPressed: () => loginCtrl
-                    .authUser(userTxtCtrl.text, pswTxtCtrl.text)
+                    .authUser(userTxtCtrl.text.trim(), pswTxtCtrl.text.trim())
                     .then((value) =>
                         {if (value) Navigator.pushNamed(context, '/scan')}),
                 child: const Text("Submeter"),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ncapp/view/UI/loginPage.dart';
+import 'package:ncapp/view/UI/scanPage.dart';
 
 void main() {
   runApp(const MyApp());
@@ -20,6 +21,7 @@ class MyApp extends StatelessWidget {
       initialRoute: '/',
       routes: {
         '/': (_) => const LoginPage(),
+        '/scan': (_) => const ScanPage(),
       }
     );
   }

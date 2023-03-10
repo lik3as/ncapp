@@ -30,7 +30,7 @@ class LoginPageState extends State<LoginPage> {
       appBar: AppBar(
         backgroundColor: const Color.fromRGBO(14, 239, 144, 1),
         title: const Center(
-          widthFactor: 1.6,
+          widthFactor: 2.5,
           child: Text(
             "AUTENTIFICAÇÃO",
             style: TextStyle(fontWeight: FontWeight.bold),

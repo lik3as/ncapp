@@ -1,25 +1,49 @@
+import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
 import 'package:ncapp/services/httpservice.dart';
 
 import '../model/product.dart';
 
 class ScanController extends ChangeNotifier {
-  String dialogText = '';
+  Map<String, String> _product = {};
+  String barcode = '';
+  String dialogBtn = '';
   String dialogTitle = '';
 
-  void update(Map product, String sn){
-    if (product.isEmpty) {dialogText = 'Registrar'; dialogTitle = sn;}
-    else {dialogText = 'Remover'; dialogTitle = product['productTitle'];}
-    notifyListeners();
+  void alertUpdate(){
+    if (_product.isEmpty){
+      dialogTitle = barcode;
+      dialogBtn = 'Registrar';
+      notifyListeners();
+      return;
+    }
+    dialogBtn = 'Remover';
+    dialogTitle = _product['nameProd']!;
+
   }
 
-  Future<Map<String, String>> authSerial(String serial) async {
+  void bodyUpdate(){
+
+  }
+
+  void requestProduct(String serial) async {
+    barcode = serial;
     HttpService http = HttpService();
     try {
       Product product = await http.getProduct(serial);
-      return product.toJson();
+      this._product = product.toJson();
     } catch (err) {
-      return Map();
+      log('Product is Empty');
+      log(err.toString());
     }
+  }
+
+  void register(){
+
+  }
+
+  void remove(){
+
   }
 }

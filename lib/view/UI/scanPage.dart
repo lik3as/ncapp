@@ -8,63 +8,11 @@ import 'package:provider/provider.dart';
 class ScanPage extends StatelessWidget {
   const ScanPage({super.key});
 
-  void scan(ScanMode scanMode, BuildContext context) async {
-    final width = MediaQuery
-        .of(context)
-        .size
-        .width;
-    final height = MediaQuery
-        .of(context)
-        .size
-        .height - 100; //Removendo Barra
-    final ScanController scanController = ScanController();
-
-    double size = sizePercent(height, 60);
-    String barcodeScan = await FlutterBarcodeScanner.scanBarcode(
-        "#ff0d11", "Cancel", true, scanMode);
-
-    Map<String, String> product = await scanController.authSerial(barcodeScan);
-    scanController.update(product, barcodeScan);
-    showDialog(
-        context: context,
-        builder: (BuildContext context)
-    =>
-        ChangeNotifierProvider(
-          create: (context) => scanController,
-          child: AlertDialog(
-              titleTextStyle: TextStyle(fontFamily: 'Jost', fontSize: 14, color: Colors.black),
-              title: Text(scanController.dialogTitle),
-                content: SizedBox(height: sizePercent(height, 60),),
-
-                actions: [
-                  TextButton(
-                    style: TextButton.styleFrom(
-                      textStyle: const TextStyle(
-                        fontSize: 16,
-                        fontFamily: "Jost",
-                        fontWeight: FontWeight.bold,
-                      ),
-                      backgroundColor: Colors.black,
-                      foregroundColor: Colors.white,
-                    ),
-                    onPressed: () => {},
-                    child: Text(scanController.dialogText),
-                  ),
-                ],
-              ),
-        ));
-  }
 
   @override
   Widget build(BuildContext context) {
-    final width = MediaQuery
-        .of(context)
-        .size
-        .width;
-    final height = MediaQuery
-        .of(context)
-        .size
-        .height - 100; //Removendo Barra
+    final width = MediaQuery.of(context).size.width;
+    final height = MediaQuery.of(context).size.height - 100; //Removendo Barra
     return Scaffold(
       drawer: const Drawer(),
       appBar: AppBar(
@@ -136,4 +84,71 @@ class ScanPage extends StatelessWidget {
     if (percent > 100) return 0;
     return (percent / 100) * screenSize;
   }
+
+  void scan(ScanMode scanMode, BuildContext context) async {
+    final width = MediaQuery.of(context).size.width;
+    final height = MediaQuery.of(context).size.height - 100; //Removendo Barra
+    final ScanController scanController = ScanController();
+
+    double size = sizePercent(height, 60);
+    String barcodeScan = await FlutterBarcodeScanner.scanBarcode(
+        "#ff0d11", "Cancel", true, scanMode);
+    scanController.requestProduct(barcodeScan);
+    scanController.alertUpdate();
+    showDialog(
+        context: context,
+        builder: (BuildContext context) => ChangeNotifierProvider(
+          create: (context) => scanController,
+          child: Consumer<ScanController>(builder: (context, ctrl, child) {
+            return AlertDialog(
+              titleTextStyle: TextStyle(
+                  fontFamily: 'Jost', fontSize: 14, color: Colors.black),
+              title: Text(ctrl.dialogTitle),
+              content: SizedBox(
+                height: sizePercent(height, 60),
+                child: Text('aa'),
+              ),
+              actions: [
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 10),
+                  child: TextButton(
+                    style: TextButton.styleFrom(
+                      textStyle: const TextStyle(
+                        fontSize: 16,
+                        fontFamily: "Jost",
+                        fontWeight: FontWeight.bold,
+                      ),
+                      backgroundColor: Colors.black,
+                      foregroundColor: Colors.white,
+                    ),
+                    onPressed: () => {Navigator.pop(context)},
+                    child: Text('Cancelar'),
+                  ),
+                ),
+
+                //Register / Remove
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 5),
+                  child: TextButton(
+                    style: TextButton.styleFrom(
+                      textStyle: const TextStyle(
+                        fontSize: 16,
+                        fontFamily: "Jost",
+                        fontWeight: FontWeight.bold,
+                      ),
+                      backgroundColor: Colors.black,
+                      foregroundColor: Colors.white,
+                    ),
+                    onPressed: () => {
+                      (ctrl.dialogBtn == "Registrar") ? ctrl.register() : ctrl.remove()
+                    },
+                    child: Text(ctrl.dialogBtn),
+                  ),
+                )
+              ],
+            );
+          }),
+        ));
+  }
+
 }

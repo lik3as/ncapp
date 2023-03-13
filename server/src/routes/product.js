@@ -4,17 +4,31 @@ const router = Router();
 
 const query_product = "SELECT * FROM Products WHERE " +
   "Products.serialProd = ?;"
-const ins_product = "INSERT INTO Products "
+const ins_product = "INSERT INTO Products (serialProd, nameProd, " +
+  "typeProd, stateProd, avaliable) " +
+  "VALUES " +
+  "(?, ?, ?, ?, ?);"
 
-router.get('/product/:serial', (req, res) => {
-  db.query(query_product, [req.params.serial], (error, rows, field) => {
+router.get('/products/:serial', (req, res) => {
+  db.query(query_product, [req.params.serial], (err, rows, field) => {
+    if (err) throw err;
     res.json(rows[0]);
     console.log(rows[0]);
   });
 });
 
-router.post('/product', (req, res) => {
-  db.query()
+router.post('/products', (req, res) => {
+  console.log("products access");
+  db.query(ins_product, [
+    req.body.serialProd,
+    req.body.nameProd,
+    req.body.typeProd,
+    req.body.stateProd,
+    req.body.avaliable
+  ], (err, result) => {
+      if (err) throw err;
+      console.log(result);
+    })
 });
 
 export default router;

@@ -1,13 +1,15 @@
+import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:lite_rolling_switch/lite_rolling_switch.dart';
 import 'package:ncapp/controller/scanController.dart';
 import 'package:provider/provider.dart';
 
 class ScanPage extends StatelessWidget {
   const ScanPage({super.key});
-
 
   @override
   Widget build(BuildContext context) {
@@ -93,62 +95,102 @@ class ScanPage extends StatelessWidget {
     double size = sizePercent(height, 60);
     String barcodeScan = await FlutterBarcodeScanner.scanBarcode(
         "#ff0d11", "Cancel", true, scanMode);
-    scanController.requestProduct(barcodeScan);
-    scanController.alertUpdate();
+
+    try {
+      await scanController.alertUpdate(barcodeScan);
+    } catch (e) {
+      return;
+    }
+
     showDialog(
         context: context,
         builder: (BuildContext context) => ChangeNotifierProvider(
-          create: (context) => scanController,
-          child: Consumer<ScanController>(builder: (context, ctrl, child) {
-            return AlertDialog(
-              titleTextStyle: TextStyle(
-                  fontFamily: 'Jost', fontSize: 14, color: Colors.black),
-              title: Text(ctrl.dialogTitle),
-              content: SizedBox(
-                height: sizePercent(height, 60),
-                child: Text('aa'),
-              ),
-              actions: [
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 10),
-                  child: TextButton(
-                    style: TextButton.styleFrom(
-                      textStyle: const TextStyle(
-                        fontSize: 16,
-                        fontFamily: "Jost",
-                        fontWeight: FontWeight.bold,
-                      ),
-                      backgroundColor: Colors.black,
-                      foregroundColor: Colors.white,
+              create: (context) => scanController,
+              child: Consumer<ScanController>(builder: (context, ctrl, child) {
+                return AlertDialog(
+                  titleTextStyle: TextStyle(
+                      fontFamily: 'Jost', fontSize: 14, color: Colors.black),
+                  title: Text(ctrl.dialogTitle),
+                  content: SizedBox(
+                    height: sizePercent(height, 60),
+                    child: SingleChildScrollView(
+                      child: (ctrl.isCrate)
+                          ? Row(
+                              //CAIXA
+                              children: [
+                                Center(
+                                  child: Text((ctrl.dialogBtn == "Registrar")
+                                      ? "Cadastro de nova Caixa"
+                                      : "Remoção da caixa"),
+                                ),
+                              ],
+                            )
+                          : Row(
+                              children: [
+                                Center(
+                                  child: Text((ctrl.dialogBtn == "Registrar")
+                                      ? "Cadastro de nova Caixa"
+                                      : "Cadastro de novo Produto"),
+                                ),
+                              ],
+                            ),
                     ),
-                    onPressed: () => {Navigator.pop(context)},
-                    child: Text('Cancelar'),
                   ),
-                ),
+                  actions: [
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 10),
+                      child: TextButton(
+                        style: TextButton.styleFrom(
+                          textStyle: const TextStyle(
+                            fontSize: 16,
+                            fontFamily: "Jost",
+                            fontWeight: FontWeight.bold,
+                          ),
+                          backgroundColor: Colors.black,
+                          foregroundColor: Colors.white,
+                        ),
+                        onPressed: () => {Navigator.pop(context)},
+                        child: Text('Cancelar'),
+                      ),
+                    ),
 
-                //Register / Remove
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 5),
-                  child: TextButton(
-                    style: TextButton.styleFrom(
-                      textStyle: const TextStyle(
-                        fontSize: 16,
-                        fontFamily: "Jost",
-                        fontWeight: FontWeight.bold,
+                    //Register / Remove
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 5),
+                      child: TextButton(
+                        style: TextButton.styleFrom(
+                          textStyle: const TextStyle(
+                            fontSize: 16,
+                            fontFamily: "Jost",
+                            fontWeight: FontWeight.bold,
+                          ),
+                          backgroundColor: Colors.black,
+                          foregroundColor: Colors.white,
+                        ),
+                        onPressed: () => {
+                          (ctrl.dialogBtn == "Registrar")
+                              ? ctrl.register()
+                              : ctrl.remove()
+                        },
+                        child: Text(ctrl.dialogBtn),
                       ),
-                      backgroundColor: Colors.black,
-                      foregroundColor: Colors.white,
                     ),
-                    onPressed: () => {
-                      (ctrl.dialogBtn == "Registrar") ? ctrl.register() : ctrl.remove()
-                    },
-                    child: Text(ctrl.dialogBtn),
-                  ),
-                )
-              ],
-            );
-          }),
-        ));
+                    LiteRollingSwitch(
+                      value: true,
+                      textOn: "Produto",
+                      textOff: "Caixa",
+                      colorOn: Colors.greenAccent,
+                      colorOff: Colors.redAccent,
+                      iconOn: Icons.add_box_sharp,
+                      iconOff: Icons.add_circle,
+                      onChanged: (val) => ctrl.isCrate = val,
+                      onTap: () {},
+                      onSwipe: () {},
+                      onDoubleTap: () {},
+                    )
+                  ],
+                );
+              }),
+            ));
   }
-
 }

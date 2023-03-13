@@ -5,10 +5,10 @@ const router = Router();
 const auth_query = "SELECT * FROM Users WHERE Users.nameUser = ? " +
   "AND Users.pswUser = ?;";
 
-router.get('/user', (req, res) => {
+router.get('/users', (req, res) => {
 });
 
-router.post('/user', (req, res) => {
+router.post('/users', (req, res) => {
   const user_login = {
     "name": req.body.nameUser,
     "psw": req.body.pswUser

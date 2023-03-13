@@ -7,11 +7,11 @@ import '../model/product.dart';
 import '../model/user.dart';
 
 class HttpService {
-  String rootUrl = 'http://192.168.0.65/';
+  String rootUrl = 'https://9824-2804-14c-cc80-89ae-b11d-a12f-39fb-db22.sa.ngrok.io';
   String usersUrl =
-      'https://ec26-2804-14c-cc80-89ae-b11d-a12f-39fb-db22.sa.ngrok.io/user';
+      'https://73ad-2804-14c-cc80-89ae-b11d-a12f-39fb-db22.sa.ngrok.io/users/';
   String productsUrl =
-      'https://ec26-2804-14c-cc80-89ae-b11d-a12f-39fb-db22.sa.ngrok.io/product/';
+      'https://73ad-2804-14c-cc80-89ae-b11d-a12f-39fb-db22.sa.ngrok.io/products/';
 
   Future<User> getUser(String name, String password) async {
     http.Response response = await http.post(Uri.parse(usersUrl),
@@ -32,25 +32,24 @@ class HttpService {
 
   Future<Product> getProduct(String serial) async {
     log(serial);
+    log(productsUrl + serial);
     http.Response response =
         await http.get(Uri.parse(productsUrl + serial), headers: {
       'content-type': 'application/json',
     });
 
-    Product = json.decode(response.body);
     try {
       return Product.fromJson(json.decode(response.body));
     } catch (err) {
-      rethrow;
+      return Product.fromJson(Product.def().toJson());
     }
   }
 
-  Future<String> insertProduct(Map product) async {
+  void insertProduct(Map product) async {
     http.Response response = await http.post(Uri.parse(productsUrl),
         headers: {'content-type': 'application/json'},
         body: jsonEncode(product));
 
-    return (response.body == "Success") ? "Success" : "Failure";
   }
 
   void disableProduct() {}

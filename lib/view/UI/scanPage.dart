@@ -6,6 +6,7 @@ import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:lite_rolling_switch/lite_rolling_switch.dart';
 import 'package:ncapp/controller/scanController.dart';
+import 'package:ncapp/view/widgets/bodyText.dart';
 import 'package:provider/provider.dart';
 
 class ScanPage extends StatelessWidget {
@@ -44,7 +45,8 @@ class ScanPage extends StatelessWidget {
               height: sizePercent(height, 8),
             ),
             Center(
-              child: TextButton(
+              child: TextButton.icon(
+                icon: Icon(Icons.qr_code_2),
                 style: TextButton.styleFrom(
                   textStyle: const TextStyle(
                     fontSize: 20,
@@ -55,13 +57,14 @@ class ScanPage extends StatelessWidget {
                   foregroundColor: Colors.white,
                 ),
                 onPressed: () => scan(ScanMode.QR, context),
-                child: Text("QR-CODE"),
+                label: Text("CÓDIGO QR"),
               ),
             ),
             Center(
               child: Padding(
                 padding: const EdgeInsets.symmetric(vertical: 18),
-                child: TextButton(
+                child: TextButton.icon(
+                  icon: Icon(Icons.barcode_reader),
                   style: TextButton.styleFrom(
                     textStyle: const TextStyle(
                       fontSize: 20,
@@ -72,13 +75,26 @@ class ScanPage extends StatelessWidget {
                     foregroundColor: Colors.white,
                   ),
                   onPressed: () => scan(ScanMode.BARCODE, context),
-                  child: Text("BARCODE"),
+                  label: Text("CÓDIGO DE BARRAS"),
                 ),
               ),
             ),
           ],
         ),
       ),
+      bottomNavigationBar: BottomNavigationBar(
+          items: const <BottomNavigationBarItem>[
+            BottomNavigationBarItem(icon: Icon(Icons.dataset), label: 'STOCK'),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.qr_code_2_rounded), label: 'SCAN'),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.check_box), label: 'REQUEST')
+          ],
+          type: BottomNavigationBarType.fixed,
+          currentIndex: 1,
+          useLegacyColorScheme: true,
+          fixedColor: Colors.green,
+          iconSize: 35),
     );
   }
 
@@ -114,31 +130,26 @@ class ScanPage extends StatelessWidget {
                   content: SizedBox(
                     height: sizePercent(height, 60),
                     child: SingleChildScrollView(
-                      child: (ctrl.isCrate)
-                          ? Row(
-                              //CAIXA
-                              children: [
-                                Center(
-                                  child: Text((ctrl.dialogBtn == "Registrar")
-                                      ? "Cadastro de nova Caixa"
-                                      : "Remoção da caixa"),
+                      child: SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Column(
+                            children: [
+                              Center(
+                                child: Text(
+                                  ctrl.bodyText,
+                                  style: TextStyle(fontFamily: 'Jost'),
                                 ),
-                              ],
-                            )
-                          : Row(
-                              children: [
-                                Center(
-                                  child: Text((ctrl.dialogBtn == "Registrar")
-                                      ? "Cadastro de nova Caixa"
-                                      : "Cadastro de novo Produto"),
-                                ),
-                              ],
-                            ),
+                              ),
+                              ScanBodyText(
+                                ctrl: scanController,
+                              )
+                            ],
+                          )),
                     ),
                   ),
                   actions: [
                     Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 10),
+                      padding: EdgeInsets.symmetric(horizontal: 5),
                       child: TextButton(
                         style: TextButton.styleFrom(
                           textStyle: const TextStyle(
@@ -170,24 +181,11 @@ class ScanPage extends StatelessWidget {
                         onPressed: () => {
                           (ctrl.dialogBtn == "Registrar")
                               ? ctrl.register()
-                              : ctrl.remove()
+                              : ctrl.update()
                         },
                         child: Text(ctrl.dialogBtn),
                       ),
                     ),
-                    LiteRollingSwitch(
-                      value: true,
-                      textOn: "Produto",
-                      textOff: "Caixa",
-                      colorOn: Colors.greenAccent,
-                      colorOff: Colors.redAccent,
-                      iconOn: Icons.add_box_sharp,
-                      iconOff: Icons.add_circle,
-                      onChanged: (val) => ctrl.isCrate = val,
-                      onTap: () {},
-                      onSwipe: () {},
-                      onDoubleTap: () {},
-                    )
                   ],
                 );
               }),

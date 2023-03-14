@@ -7,11 +7,17 @@ import '../model/product.dart';
 import '../model/user.dart';
 
 class HttpService {
-  String rootUrl = 'https://9824-2804-14c-cc80-89ae-b11d-a12f-39fb-db22.sa.ngrok.io';
-  String usersUrl =
-      'https://73ad-2804-14c-cc80-89ae-b11d-a12f-39fb-db22.sa.ngrok.io/users/';
-  String productsUrl =
-      'https://73ad-2804-14c-cc80-89ae-b11d-a12f-39fb-db22.sa.ngrok.io/products/';
+  String rootUrl =
+      'https://19fd-2804-14c-cc80-89ae-b11d-a12f-39fb-db22.sa.ngrok.io/';
+  String usersUrl = 'users/';
+  String productsUrl = 'products/';
+  String linkedUrl = 'linked/';
+
+  HttpService() {
+    usersUrl = rootUrl + usersUrl;
+    productsUrl = rootUrl + productsUrl;
+    linkedUrl = rootUrl + linkedUrl;
+  }
 
   Future<User> getUser(String name, String password) async {
     http.Response response = await http.post(Uri.parse(usersUrl),
@@ -46,10 +52,16 @@ class HttpService {
   }
 
   void insertProduct(Map product) async {
-    http.Response response = await http.post(Uri.parse(productsUrl),
+    await http.post(Uri.parse(productsUrl),
         headers: {'content-type': 'application/json'},
         body: jsonEncode(product));
+  }
 
+  Future<List<Product>> getProducts({required String serial}) async {
+    http.Response response = await http.get(Uri.parse(linkedUrl + serial),
+        headers: {'content-type': 'application/json'});
+    log(response.body.toString());
+    return jsonDecode(response.body);
   }
 
   void disableProduct() {}

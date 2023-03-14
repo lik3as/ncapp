@@ -1,9 +1,6 @@
-import 'dart:convert';
-import 'dart:ffi';
-
 class Product {
   int pk;
-  int? fkCrate;
+  int fkProd;
   String serial;
   String name;
   String type;
@@ -16,7 +13,8 @@ class Product {
     required this.type,
     required this.state,
     required this.available,
-    required this.fkCrate}) {}
+    required this.fkProd
+    }) {}
 
   factory Product.def(){
     return Product(
@@ -26,7 +24,8 @@ class Product {
         type: '',
         state: "N/A",
         available: 0,
-        fkCrate: -1);
+      fkProd: -1,
+        );
   }
 
   factory Product.fromJson(Map<String, dynamic> Json) {
@@ -37,7 +36,7 @@ class Product {
         type: Json['typeProd'],
         state: Json['stateProd'],
         available: Json['avaliable'] as int,
-        fkCrate: (Json['fkCrate'] == null) ? -1 : Json['fkCrate'] as int,
+        fkProd: (Json['fkCrate'] == null) ? -1 : Json['fkCrate'],
     );
   }
 
@@ -49,7 +48,7 @@ class Product {
       'typeProd': this.type,
       'stateProd': this.state,
       'avaliable': this.available,
-      'fkCrate': this.fkCrate,
+      'fkCrate': this.fkProd,
     };
   }
 }

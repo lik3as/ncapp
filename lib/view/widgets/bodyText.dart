@@ -1,5 +1,8 @@
+import 'dart:developer';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 
 import '../../controller/scanController.dart';
 
@@ -8,10 +11,7 @@ class ScanBodyText extends StatelessWidget {
 
   ScanBodyText({required this.ctrl});
 
-  List<String> available = [
-    'Disponível',
-    'Não está disponível'
-  ];
+  List<String> available = ['Disponível', 'Não está disponível'];
 
   double sizePercent(double screenSize, double percent) {
     if (percent > 100) return 0;
@@ -92,7 +92,6 @@ class ScanBodyText extends StatelessWidget {
               value: (ctrl.nameVal.isEmpty) ? null : ctrl.nameVal,
             ),
           ),
-
           Padding(
             padding: EdgeInsets.symmetric(vertical: 8),
             child: DropdownButtonFormField(
@@ -123,19 +122,19 @@ class ScanBodyText extends StatelessWidget {
               value: (ctrl.availableVal.isEmpty) ? null : ctrl.availableVal,
             ),
           ),
-
           Padding(
             padding: EdgeInsets.symmetric(vertical: 8),
             child: TextField(
-              controller: ScanController.prod_ctrl,
+              onTap: () => scan(),
               style: const TextStyle(
                 fontFamily: "Jost",
                 fontSize: 12,
               ),
               decoration: InputDecoration(
-                hintText: "Vinculado a",
                 focusedBorder: OutlineInputBorder(),
                 enabledBorder: OutlineInputBorder(),
+                labelText: ctrl.serialLink,
+                labelStyle: TextStyle(color: Colors.black),
                 icon: Icon(
                   Icons.qr_code,
                   color: Colors.black,
@@ -170,5 +169,12 @@ class ScanBodyText extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  void scan() async {
+    log("BODYSCAN");
+    String barcodeScan = await FlutterBarcodeScanner.scanBarcode(
+        "#ff0d11", "Cancel", true, ScanMode.BARCODE);
+    ctrl.setHint = barcodeScan;
   }
 }

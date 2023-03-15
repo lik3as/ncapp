@@ -1,6 +1,5 @@
 class Product {
   int pk;
-  int fkProd;
   String serial;
   String name;
   String type;
@@ -13,7 +12,6 @@ class Product {
     required this.type,
     required this.state,
     required this.available,
-    required this.fkProd
     }) {}
 
   factory Product.def(){
@@ -24,7 +22,6 @@ class Product {
         type: '',
         state: "N/A",
         available: 0,
-      fkProd: -1,
         );
   }
 
@@ -35,8 +32,7 @@ class Product {
         name: Json['nameProd'],
         type: Json['typeProd'],
         state: Json['stateProd'],
-        available: Json['avaliable'] as int,
-        fkProd: (Json['fkCrate'] == null) ? -1 : Json['fkCrate'],
+        available: Json['available'] as int,
     );
   }
 
@@ -47,8 +43,7 @@ class Product {
       'nameProd': this.name,
       'typeProd': this.type,
       'stateProd': this.state,
-      'avaliable': this.available,
-      'fkCrate': this.fkProd,
+      'available': this.available,
     };
   }
 }

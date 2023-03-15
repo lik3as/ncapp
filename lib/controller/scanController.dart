@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
@@ -10,25 +11,26 @@ import '../model/product.dart';
 class ScanController extends ChangeNotifier {
   Map<String, dynamic> _product = Product.def().toJson();
   Map<String, dynamic> _productIn = Product.def().toJson();
-  List<Map<String, dynamic>>? items;
+  List<Map<String, dynamic>>? linkItems;
   String? dropName;
   String typeVal = '', nameVal = '', availableVal = '';
+  String serialLink = 'Vinculado a';
 
-  void resetNameVal(){
+  void resetNameVal() {
     nameVal = '';
     notifyListeners();
   }
 
-  void switchAvailableVal(String val){
+  void switchAvailableVal(String val) {
+    if (val == "Disponível")
+      _productIn['available'] = 1;
+    else
+      _productIn['available'] = 0;
     availableVal = val;
     notifyListeners();
   }
 
-  static TextEditingController name_ctrl = TextEditingController(),
-      type_ctrl = TextEditingController(),
-      available_ctrl = TextEditingController(),
-      prod_ctrl = TextEditingController(),
-      state_ctrl = TextEditingController();
+  static TextEditingController state_ctrl = TextEditingController();
 
   static const type_options = <String>{"Drone", "Peça", "Caixa"};
 
@@ -40,6 +42,15 @@ class ScanController extends ChangeNotifier {
     notifyListeners();
   }
 
+  set setHint(String serial) {
+    serialLink = serial;
+    notifyListeners();
+  }
+
+  get getProdSerial {
+    return _productIn['serialProd'];
+  }
+
   static List<String> name_options = ['Padrão'];
 
   String? get getNameProd => _productIn['nameProd'];
@@ -48,7 +59,6 @@ class ScanController extends ChangeNotifier {
     this._productIn['nameProd'] = prodInName;
     notifyListeners();
   }
-
 
   List<String> _getName() {
     switch (_productIn['typeProd']) {
@@ -92,6 +102,7 @@ class ScanController extends ChangeNotifier {
     try {
       await requestProduct(serial);
     } catch (err) {
+      log('requestThrow: ${err.toString()}');
       Fluttertoast.showToast(
         msg: err.toString(),
         backgroundColor: Colors.white,
@@ -103,7 +114,7 @@ class ScanController extends ChangeNotifier {
     }
 
     dialogTitle = _product['serialProd'];
-    if (_product.isEmpty || _product['pkProd'] == -1) {
+    if (_product['pkProd'] == -1) {
       dialogBtn = 'Registrar';
       bodyText = 'Este S/N ainda não foi registrado!';
       notifyListeners();
@@ -123,26 +134,55 @@ class ScanController extends ChangeNotifier {
       _product.addEntries(product.toJson().entries);
     } catch (err) {
       log('requestProduct: ' + err.toString());
-      rethrow;
     }
     this._product['serialProd'] = serial;
     this._productIn['serialProd'] = serial;
   }
 
-  void register() {
-    if (_product.isEmpty) return;
-    _productIn['nameProd'] = name_ctrl.text;
-    _productIn['typeProd'] = type_ctrl.text;
-    _productIn['stateProd'] = state_ctrl.text;
-    _productIn['avaliable'] = available_ctrl.text;
+  Future<void> createLink(
+      {required String type,
+      required String parentSerial,
+      required String childSerial}) async {
     try {
-      http.insertProduct(_product);
+      await http.insertLink(
+          type: type, parentSerial: parentSerial, childSerial: childSerial);
     } catch (err) {
-      log('register: ' + err.toString());
+      rethrow;
     }
   }
 
-  void requestLinkedItems(String serial){
+  void register(BuildContext context) async {
+    log('Product Register: ${_productIn.toString()}');
+      String type = 'DronePart';
+      if (_productIn['typeProd'] == 'Caixa')
+        type = 'BoxDrone';
+
+      _productIn['stateProd'] = state_ctrl.text;
+      try {
+        http.insertProduct(_productIn);
+        await createLink(
+            type: type,
+            parentSerial: _productIn['serialProd'],
+            childSerial: serialLink);
+      } catch (err) {
+        log('register: ' + err.toString());
+        Fluttertoast.showToast(
+          msg: 'Vínculo inválido! ',
+          backgroundColor: Colors.white,
+          textColor: Colors.black,
+          fontSize: 20,
+          toastLength: Toast.LENGTH_LONG,);
+        Navigator.of(context).pop();
+        return;
+      }
+
+  }
+
+  Future<void> requestLinkedItems(String serial, String type) async {
+    List<Product> products = await http.getProducts(serial: serial, type: type);
+    products.forEach((element) {
+      linkItems?.add(element.toJson());
+    });
   }
 
   void update() {}

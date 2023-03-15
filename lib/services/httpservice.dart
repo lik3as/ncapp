@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:developer';
-
 import 'package:http/http.dart' as http;
 
 import '../model/product.dart';
@@ -8,7 +7,7 @@ import '../model/user.dart';
 
 class HttpService {
   String rootUrl =
-      'https://19fd-2804-14c-cc80-89ae-b11d-a12f-39fb-db22.sa.ngrok.io/';
+      'https://e380-2804-14c-cc80-89ae-b11d-a12f-39fb-db22.sa.ngrok.io/';
   String usersUrl = 'users/';
   String productsUrl = 'products/';
   String linkedUrl = 'linked/';
@@ -37,31 +36,58 @@ class HttpService {
   }
 
   Future<Product> getProduct(String serial) async {
-    log(serial);
-    log(productsUrl + serial);
+    log('httpGetSerial: $serial');
     http.Response response =
         await http.get(Uri.parse(productsUrl + serial), headers: {
       'content-type': 'application/json',
     });
 
+    if (response.body.isEmpty) throw "Produto Não Encontrado!";
     try {
       return Product.fromJson(json.decode(response.body));
     } catch (err) {
-      return Product.fromJson(Product.def().toJson());
+      rethrow;
     }
   }
 
-  void insertProduct(Map product) async {
+  Future<void> insertProduct(Map product) async {
     await http.post(Uri.parse(productsUrl),
         headers: {'content-type': 'application/json'},
         body: jsonEncode(product));
   }
 
-  Future<List<Product>> getProducts({required String serial}) async {
-    http.Response response = await http.get(Uri.parse(linkedUrl + serial),
+  Future<List<Product>> getProducts(
+      {required String type, required String serial}) async {
+    http.Response response = await http.get(
+        Uri.parse('${linkedUrl}${type}/${serial}'),
         headers: {'content-type': 'application/json'});
-    log(response.body.toString());
+    log('getProducts: ${response.body.toString()}');
     return jsonDecode(response.body);
+  }
+
+  Future<void> insertLink(
+      {required String type,
+      required String parentSerial,
+      required String childSerial}) async {
+    try {
+      log('PARENT: $parentSerial');
+      log('CHILD: $childSerial');
+      Product parent = Product.def();
+      Product child = Product.def();
+      parent = await getProduct(parentSerial);
+      child = await getProduct(childSerial);
+
+      log(parent.toJson()['pkProd'].toString());
+      await http.post(Uri.parse('$linkedUrl$type'),
+          headers: {'content-type': 'application/json'},
+          body: jsonEncode(<String, String>{
+            'pkParent': parent.toJson()['pkProd'].toString(),
+            'pkChild': child.toJson()['pkProd'].toString(),
+          }));
+    } catch (err) {
+      log('InsertLinkFail: ${err.toString()}');
+      rethrow;
+    }
   }
 
   void disableProduct() {}

@@ -10,13 +10,16 @@ import 'package:ncapp/view/widgets/bodyText.dart';
 import 'package:provider/provider.dart';
 
 class ScanPage extends StatelessWidget {
-  const ScanPage({super.key});
+  ScanPage({super.key});
+
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height - 100; //Removendo Barra
     return Scaffold(
+      key: _scaffoldKey,
       drawer: const Drawer(),
       appBar: AppBar(
         backgroundColor: const Color.fromRGBO(14, 239, 144, 1),
@@ -83,18 +86,20 @@ class ScanPage extends StatelessWidget {
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
-          items: const <BottomNavigationBarItem>[
-            BottomNavigationBarItem(icon: Icon(Icons.dataset), label: 'STOCK'),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.qr_code_2_rounded), label: 'SCAN'),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.check_box), label: 'REQUEST')
-          ],
-          type: BottomNavigationBarType.fixed,
-          currentIndex: 1,
-          useLegacyColorScheme: true,
-          fixedColor: Colors.green,
-          iconSize: 35),
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(icon: Icon(Icons.dataset), label: 'STOCK'),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.qr_code_2_rounded), label: 'SCAN'),
+          BottomNavigationBarItem(icon: Icon(Icons.check_box), label: 'REQUEST')
+        ],
+        type: BottomNavigationBarType.fixed,
+        currentIndex: 1,
+        useLegacyColorScheme: true,
+        fixedColor: Colors.green,
+        iconSize: 35,
+        onTap: (val) {
+        },
+      ),
     );
   }
 
@@ -178,11 +183,11 @@ class ScanPage extends StatelessWidget {
                           backgroundColor: Colors.black,
                           foregroundColor: Colors.white,
                         ),
-                        onPressed: () => {
-                          (ctrl.dialogBtn == "Registrar")
-                              ? ctrl.register()
-                              : ctrl.update()
-                        },
+                        onPressed: ()  {
+                            (ctrl.dialogBtn == "Registrar")
+                                ? ctrl.register(context)
+                                : ctrl.update();
+                          },
                         child: Text(ctrl.dialogBtn),
                       ),
                     ),

@@ -1,7 +1,22 @@
 {
   "dependencies": {
     "express": "^4.18.2",
+    "mysql2": "^3.2.0",
+    "nodemon": "^2.0.21",
     "sequelize": "^6.29.3",
+    "sequelize-cli": "^6.6.0",
     "sqlite3": "^5.1.6"
-  }
+  },
+  "name": "server",
+  "type": "module",
+  "version": "1.0.0",
+  "main": "./src/server.js",
+  "scripts": {
+    "start": "nodemon src/server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": ""
 }

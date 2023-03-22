@@ -1,25 +1,7 @@
 {
   "dependencies": {
     "express": "^4.18.2",
-    "http": "^0.0.1-security",
-    "mysql": "^2.18.1"
-  },
-  "type": "module",
-  "name": "ncaserver",
-  "version": "1.0.0",
-  "description": "interface for APPLICATION and MYSQL",
-  "main": "index.js",
-  "scripts": {
-    "test": "console.log(\"Hello World!\");"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/lik3as/ncapp.git"
-  },
-  "author": "davi almeida",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/lik3as/ncapp/issues"
-  },
-  "homepage": "https://github.com/lik3as/ncapp#readme"
+    "sequelize": "^6.29.3",
+    "sqlite3": "^5.1.6"
+  }
 }

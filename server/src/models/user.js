@@ -10,6 +10,7 @@ User.init({
   },
   nameUser: {
     type: DataTypes.STRING,
+    unique: true,
     allowNull: true,
   },
   pswUser: {

@@ -2,10 +2,19 @@ import User from '../models/user.js'
 
 export default {
   async createUser(req, res){
-    const username = req.params.username;
-    const userpsw = req.params.userpsw;
-    const user = await User.create({username, userpsw}); 
+    const {nameUser, pswUser} = req.body;
+    const user = await User.create({nameUser, pswUser}); 
 
     return res.json(user);
   },
+  async readUser(req, res){
+    const {nameUser} = req.body;
+    const user = await User.findOne({
+      where: {
+        nameUser
+      }
+    }); 
+
+    return res.json(user);
+  }
 }

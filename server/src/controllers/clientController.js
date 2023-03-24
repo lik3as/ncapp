@@ -25,10 +25,10 @@ export default {
       next();
 
     else {
-    const client_json = req.body;  
-    const client = await Client.create(client_json);
+      const client_json = req.body;  
+      const client = await Client.create(client_json);
 
-    return res.json(client);
+      return res.json(client);
     }
   },
 
@@ -42,11 +42,13 @@ export default {
       email : req.body.email
     };
 
-    return await Client.update(client_json, {
+    const client = await Client.update(client_json, {
       where: {
         pkCli: req.body.pkCli
       }
-    })
+    });
+
+    return res.json(client);
   },
 
 }

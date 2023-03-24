@@ -3,7 +3,7 @@ import Client from '../models/client.js'
 export default {
   async readClient(req, res, next){
     if(typeof req.params.name == undefined)
-      next();
+      next('route');
     else{
       const client = await Client.findAll({
         where: {

@@ -16,7 +16,7 @@ export default {
   },
 
   async createItem(req, res, next){
-    if(req.header.update == "true")
+    if(req.get('update') == true)
       next();
     else{
       const item_json = req.body;

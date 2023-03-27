@@ -1,5 +1,10 @@
 import Client from '../models/client.js'
 
+/*
+ * findAll em vez de findByPk é dado
+ * Em razão da UNIQUE nome
+*/
+
 export default {
   async readClient(req, res, next){
     if(typeof req.params.name == undefined)
@@ -21,7 +26,7 @@ export default {
   },
   
   async createClient(req, res, next){
-    if(req.header.update == "true")
+    if(req('update') == true)
       next();
 
     else {

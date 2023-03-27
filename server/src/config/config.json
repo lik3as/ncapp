@@ -1,0 +1,16 @@
+{
+  "development": {
+    "dialect": "mysql",
+    "host": "localhost",
+    "username": "root",
+    "password": "MYSQLROOT3306",
+    "database": "nca_stock"
+  },
+  "production": {
+    "dialect": "mysql",
+    "host": "localhost",
+    "username": "root",
+    "password": "MYSQLROOT3306",
+    "database": "nca_stock_production"
+  }
+}

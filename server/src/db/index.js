@@ -10,7 +10,6 @@ try{
   console.log(err);
 }
 
-sequelize.sync({force: true});
-
+await sequelize.sync({force: false});
 
 export default sequelize;

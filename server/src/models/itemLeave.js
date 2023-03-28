@@ -3,7 +3,7 @@ import con from '../db/index.js';
 
 class ItemLeave extends Model {}
 ItemLeave.init({
-  pkSaida: {
+  pkLeave: {
     type: DataTypes.INTEGER,
     primaryKey: true,
     autoIncrement: true,

@@ -5,13 +5,13 @@ export default {
     if(typeof req.params.pk == undefined)
       next('route');
     else {
-      const item = Item.findByPk(req.params.pk);
+      const item = await Item.findByPk(req.params.pk);
       return res.json(item);
     }
   },
 
   async readItems(req, res){
-    const items = Item.findAll();
+    const items = await Item.findAll();
     return res.json(items);
   },
 
@@ -20,7 +20,7 @@ export default {
       next();
     else{
       const item_json = req.body;
-      const item = Item.create(item_json)
+      const item = await Item.create(item_json)
       return res.json(item);
     }
   },
@@ -34,7 +34,7 @@ export default {
       desc: req.body.desc
     }
 
-    const item = Item.update({item_json}, {
+    const item = await Item.update({item_json}, {
       where: {
         pkItem: req.body.pkItem
       }

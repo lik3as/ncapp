@@ -7,6 +7,8 @@ import cat_router from './routes/cats.js';
 import cliType_router from './routes/cliTypes.js';
 import itemEntry_router from './routes/itemEntries.js';
 import itemEntryOfc_router from './routes/itemEntriesOfc.js';
+import itemLeave_router from './routes/itemLeaves.js';
+import itemState_router from './routes/itemStates.js';
 
 const app = express();
 
@@ -23,6 +25,8 @@ app.use(cat_router);
 app.use(cliType_router);
 app.use(itemEntry_router);
 app.use(itemEntryOfc_router);
+app.use(itemLeave_router);
+app.use(itemState_router);
 
 app.listen(app.get('port'), () => {
   console.log(`Server is Running at: ${app.get('port')}`);

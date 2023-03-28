@@ -1,8 +1,8 @@
-import ItemLeave from '../models/itemLeave.js'
+import {ItemLeave} from '../models/associations/modelExports.js';
 
 export default {
   async createLeave(req, res, next){
-    if(req.get('update') == true)
+    if(req.get('update') == "true")
       next();
     else{
       const leave = ItemLeave.create(req.body);

@@ -1,4 +1,4 @@
-import Categorie from '../models/categorie.js'
+import {Categorie} from '../models/associations/modelExports.js';
 
 export default {
   async getCategories(req, res){

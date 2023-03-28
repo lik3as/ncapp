@@ -1,4 +1,4 @@
-import Item from '../models/item.js'
+import {Item} from '../models/associations/modelExports.js';
 
 export default {
   async readItem(req, res, next){
@@ -16,8 +16,9 @@ export default {
   },
 
   async createItem(req, res, next){
-    if(req.get('update') == true)
-      next();
+    console.log('REQ HEADER' + req.get('update'));
+    if(req.get('update') == "true")
+      return next();
     else{
       const item_json = req.body;
       const item = await Item.create(item_json)
@@ -26,6 +27,7 @@ export default {
   },
   
   async updateItem(req, res){
+    console.log('UPDATE ITEM');
     const item_json = {
       fkCat: req.body.fkCat,
       fkState: req.body.fkState,
@@ -34,7 +36,7 @@ export default {
       desc: req.body.desc
     }
 
-    const item = await Item.update({item_json}, {
+    const item = await Item.update(item_json, {
       where: {
         pkItem: req.body.pkItem
       }

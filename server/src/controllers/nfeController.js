@@ -1,8 +1,8 @@
-import Nfe from '../models/nfe.js';
+import {Nfe} from '../models/associations/modelExports.js';
 
 export default {
   async createNfe(req, res, next){
-    if(req.get('update') == true)
+    if(req.get('update') == "true")
       next();
     else{
       const nfe_json = req.body;

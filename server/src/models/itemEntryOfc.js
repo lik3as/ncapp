@@ -8,12 +8,6 @@ ItemEntryOfc.init({
     primaryKey: true,
     autoIncrement: true
   },
-  fkItem: {
-    type: DataTypes.INTEGER,
-  },
-  fkType: {
-    type: DataTypes.INTEGER
-  },
   data: {
     type: DataTypes.DATE
   },

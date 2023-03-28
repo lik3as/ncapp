@@ -1,8 +1,8 @@
-import ItemEntryOfc from '../models/itemEntryOfc.js';
+import {ItemEntryOfc} from '../models/associations/modelExports.js';;
 
 export default {
   async createEntryOfc(req, res, next){
-    if(req.get('update') == true) 
+    if(req.get('update') == "true") 
       next();
     else{
       const entry_ofc = await ItemEntryOfc.create(req.body);
@@ -14,6 +14,7 @@ export default {
     const entry_ofc_json = {
       fkItem: req.body.fkItem,
       fkType: req.body.fkType,
+      fkCliType: req.body.fkCliType,
       data: req.body.data,
       desc: req.body.desc
     }

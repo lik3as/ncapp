@@ -1,8 +1,8 @@
-import ItemEntry from '../models/itemEntry.js'
+import {ItemEntry} from '../models/associations/modelExports.js';
 
 export default {
   async createEntry(req, res, next){
-    if(req.get('update') == true)
+    if(req.get('update') == "true")
       return next();
     else{
       const entry = await ItemEntry.create(req.body);

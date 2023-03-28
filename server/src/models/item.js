@@ -8,12 +8,6 @@ Item.init({
     primaryKey: true,
     autoIncrement: true
   },
-  fkCat: {
-    type: DataTypes.INTEGER,
-  },
-  fkState: {
-    type: DataTypes.INTEGER
-  },
   serialItem: {
     type: DataTypes.STRING
   },

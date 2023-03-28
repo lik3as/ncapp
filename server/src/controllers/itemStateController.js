@@ -1,4 +1,4 @@
-import ItemState from '../models/itemState.js';
+import {ItemState} from '../models/associations/modelExports.js';
 
 export default {
   async readStates(req, res){

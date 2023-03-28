@@ -8,15 +8,6 @@ ItemLeave.init({
     primaryKey: true,
     autoIncrement: true,
   },
-  fkNfe: {
-    type: DataTypes.INTEGER,
-  },
-  fkCli: {
-    type: DataTypes.INTEGER
-  },
-  fkItem: {
-    type: DataTypes.INTEGER
-  },
   data: {
     type: DataTypes.DATE
   },

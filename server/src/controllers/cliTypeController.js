@@ -1,4 +1,4 @@
-import ClientType from '../models/clientType.js';
+import {ClientType} from '../models/associations/modelExports.js';
 
 export default {
   async getTypes(req, res){

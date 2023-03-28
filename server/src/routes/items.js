@@ -4,7 +4,7 @@ const router = Router();
 
 router.get('/items/:pk', ctrl.readItem);
 router.get('/items', ctrl.readItems);
-router.post('/items', ctrl.createItem,(ctrl.updateItem));
+router.post('/items', ctrl.createItem, ctrl.updateItem);
 
 export default router;
 

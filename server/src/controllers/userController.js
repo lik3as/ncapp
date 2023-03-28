@@ -1,4 +1,4 @@
-import User from '../models/user.js'
+import {User} from '../models/associations/modelExports.js';
 
 export default {
   async createUser(req, res){

@@ -1,4 +1,4 @@
-import Client from '../models/client.js'
+import {Client} from '../models/associations/modelExports.js';
 
 /*
  * findAll em vez de findByPk é dado
@@ -26,8 +26,8 @@ export default {
   },
   
   async createClient(req, res, next){
-    if(req('update') == true)
-      next();
+    if(req('update') == "true")
+      return next();
 
     else {
       const client_json = req.body;  
